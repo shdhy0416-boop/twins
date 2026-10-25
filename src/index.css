@@ -1,0 +1,407 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth transition for theme switching & global rounded font */
+html, body {
+  font-family: 'Baloo Bhaijaan 2', 'Baloo 2', 'Fredoka', 'Cairo', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  background-color: #F8F7F2;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark, body.dark {
+  color-scheme: dark;
+  background-color: #111813;
+}
+
+/* Custom rounded typography utility classes matching the provided bubble font */
+.font-bubble {
+  font-family: 'Baloo Bhaijaan 2', 'Baloo 2', 'Fredoka', sans-serif;
+  font-weight: 800;
+}
+
+/* Animated undulating fluid background (وخلي كل المشروع مموج يتحرك) */
+@keyframes ambientWaveMesh {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveDrift1 {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-18px) translateX(25px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+}
+
+@keyframes waveDrift2 {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1.05);
+  }
+  50% {
+    transform: translateY(22px) translateX(-20px) scale(1);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1.05);
+  }
+}
+
+.ambient-wavy-bg {
+  background: radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.09) 0%, transparent 45%),
+              radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 40%, rgba(11, 93, 59, 0.07) 0%, transparent 60%),
+              linear-gradient(135deg, #F8F7F2 0%, #F5F1E8 50%, #EFEAE0 100%);
+  background-size: 200% 200%;
+  animation: ambientWaveMesh 16s ease-in-out infinite;
+}
+
+html.dark .ambient-wavy-bg {
+  background: radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.14) 0%, transparent 45%),
+              radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 40%, rgba(11, 93, 59, 0.15) 0%, transparent 60%),
+              linear-gradient(135deg, #111813 0%, #16201A 50%, #0D140F 100%);
+  background-size: 200% 200%;
+  animation: ambientWaveMesh 16s ease-in-out infinite;
+}
+
+.wave-element-1 {
+  animation: waveDrift1 12s ease-in-out infinite;
+}
+
+.wave-element-2 {
+  animation: waveDrift2 15s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   INTERACTIVE DYNAMIC TOUCH GLOW ON ALL CARDS & BUTTONS
+   (توهج هالة تفاعلي زمردي وذهبي يتبع موضع اللمس والمؤشر مع تلاشي 0.4s سلس)
+   ========================================================================== */
+button:not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]),
+[role="button"]:not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]),
+.glow-surface:not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]),
+div.rounded-3xl:not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]):not([class*="max-h-"]) {
+  position: relative;
+}
+
+button:not(:disabled):not([data-custom-glow="true"])::after,
+[role="button"]:not([data-custom-glow="true"])::after,
+.glow-surface:not([data-custom-glow="true"])::after,
+div.rounded-3xl:not([data-custom-glow="true"]):not([class*="max-h-"])::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(
+    200px circle at var(--tg-x, 50%) var(--tg-y, 50%),
+    rgba(16, 185, 129, 0.30),
+    rgba(212, 175, 55, 0.20) 48%,
+    transparent 74%
+  );
+}
+
+button:not(:disabled):not([data-custom-glow="true"])[data-tg-active="true"]::after,
+[role="button"]:not([data-custom-glow="true"])[data-tg-active="true"]::after,
+.glow-surface:not([data-custom-glow="true"])[data-tg-active="true"]::after,
+div.rounded-3xl:not([data-custom-glow="true"]):not([class*="max-h-"])[data-tg-active="true"]::after {
+  opacity: 1;
+}
+
+button:not(:disabled)[data-tg-active="true"],
+[role="button"][data-tg-active="true"],
+.glow-surface[data-tg-active="true"],
+.card-interactive[data-tg-active="true"],
+div.rounded-3xl:not([class*="max-h-"])[data-tg-active="true"] {
+  box-shadow: 0 0 22px rgba(16, 185, 129, 0.28), 0 0 10px rgba(212, 175, 55, 0.18);
+}
+
+/* Interactive reaction: soft light green on touch / click / active / focus */
+button:active:not(:disabled),
+[role="button"]:active,
+.btn-interactive:active,
+.card-interactive:active {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.36), 0 0 10px rgba(212, 175, 55, 0.24) !important;
+  transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out, transform 0.12s ease-out;
+}
+
+button:active:not(:disabled):not([data-fixed-size="true"]),
+[role="button"]:active:not([data-fixed-size="true"]),
+.btn-interactive:active:not([data-fixed-size="true"]),
+.card-interactive:active:not([data-fixed-size="true"]) {
+  transform: scale(0.985);
+}
+
+html.dark button:active:not(:disabled),
+html.dark [role="button"]:active,
+html.dark .btn-interactive:active,
+html.dark .card-interactive:active {
+  border-color: #34D399 !important;
+  box-shadow: 0 0 22px rgba(52, 211, 153, 0.42), 0 0 12px rgba(212, 175, 55, 0.26) !important;
+  transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out, transform 0.12s ease-out;
+}
+
+html.dark button:active:not(:disabled):not([data-fixed-size="true"]),
+html.dark [role="button"]:active:not([data-fixed-size="true"]),
+html.dark .btn-interactive:active:not([data-fixed-size="true"]),
+html.dark .card-interactive:active:not([data-fixed-size="true"]) {
+  transform: scale(0.985);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #10B981 !important;
+  background-color: #F2FBF6 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+  outline: none !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #34D399 !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25) !important;
+  outline: none !important;
+}
+
+/* 3D Sticker Animations (تتمايل يميناً ويساراً) */
+@keyframes stickerSway {
+  0%, 100% {
+    transform: rotate(-6deg) translateX(-4px);
+  }
+  50% {
+    transform: rotate(6deg) translateX(4px);
+  }
+}
+
+@keyframes stickerBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.04);
+  }
+}
+
+@keyframes stickerPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.25));
+  }
+  50% {
+    transform: scale(1.06);
+    filter: drop-shadow(0 8px 16px rgba(212, 175, 55, 0.45));
+  }
+}
+
+.animate-sticker-sway {
+  animation: stickerSway 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.animate-sticker-bounce {
+  animation: stickerBounce 1.8s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.animate-sticker-pulse {
+  animation: stickerPulse 1.6s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes curiosityHeartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.13);
+  }
+  34% {
+    transform: scale(0.97);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes curiosityShimmer {
+  0% {
+    transform: translateX(120%) skewX(-18deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.55;
+  }
+  60% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-curiosity-heartbeat {
+  animation: curiosityHeartbeat 2.6s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.animate-curiosity-shimmer {
+  animation: curiosityShimmer 4.5s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeInSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes bioCaretBlink {
+  0%, 48% {
+    opacity: 1;
+  }
+  52%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-bio-caret {
+  animation: bioCaretBlink 0.9s ease-in-out infinite;
+}
+
+/* Smooth GPU-composited Right-to-Left (من اليمين لليسار) luxury glow sweep */
+@keyframes rtlBezelGlowSweep {
+  0% {
+    transform: translateX(115%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-115%);
+    opacity: 0;
+  }
+}
+
+@keyframes rtlSurfaceGlowSweep {
+  0% {
+    transform: translateX(125%) skewX(-16deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateX(-135%) skewX(-16deg);
+    opacity: 0;
+  }
+}
+
+.animate-rtl-bezel-glow {
+  animation: rtlBezelGlowSweep 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-rtl-surface-glow {
+  animation: rtlSurfaceGlowSweep 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   UNIVERSAL LUXURY CARD BEZEL & SWEEPING RTL EMERALD-GOLD GLOW
+   (توهج الزمرد والذهب المتحرك من اليمين لليسار مع برواز ظل فخم لكل الكروت)
+   ========================================================================== */
+.luxury-card-shimmer,
+div.rounded-3xl:not([data-luxury-bezel="true"]):not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]):not([class*="max-h-"]) {
+  position: relative;
+  overflow: hidden;
+}
+
+div.rounded-3xl:not([data-luxury-bezel="true"]):not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]):not([class*="max-h-"]) {
+  border-color: rgba(11, 93, 59, 0.26);
+  box-shadow:
+    0 9px 0 0 #BFD5C8,
+    0 20px 42px -6px rgba(11, 93, 59, 0.22),
+    0 6px 18px rgba(212, 175, 55, 0.16);
+}
+
+html.dark div.rounded-3xl:not([data-luxury-bezel="true"]):not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]):not([class*="max-h-"]) {
+  border-color: rgba(16, 185, 129, 0.30);
+  box-shadow:
+    0 9px 0 0 #07120C,
+    0 22px 46px rgba(0, 0, 0, 0.78),
+    0 0 28px rgba(16, 185, 129, 0.16);
+}
+
+/* Top Sweeping Right-to-Left Emerald-Gold Crown Ribbon (::before) */
+.luxury-card-shimmer::before,
+div.rounded-3xl:not([data-luxury-bezel="true"]):not([class*="fixed"]):not([class*="absolute"]):not([class*="sticky"]):not([class*="max-h-"])::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -15%;
+  right: -15%;
+  height: 2.5px;
+  pointer-events: none;
+  z-index: 15;
+  background: linear-gradient(
+    270deg,
+    transparent 5%,
+    #10B981 35%,
+    #FBBF24 50%,
+    #0B5D3B 68%,
+    transparent 95%
+  );
+  animation: rtlBezelGlowSweep 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-curiosity-heartbeat,
+  .animate-curiosity-shimmer,
+  .animate-bio-caret,
+  .animate-rtl-bezel-glow,
+  .animate-rtl-surface-glow,
+  .animate-sticker-sway,
+  .animate-sticker-bounce,
+  .animate-sticker-pulse,
+  .luxury-card-shimmer::before,
+  div.rounded-3xl::before {
+    animation: none !important;
+  }
+}

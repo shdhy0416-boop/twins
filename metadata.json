@@ -1,0 +1,6 @@
+{
+  "name": "TWIN - Personality Discovery & Matching",
+  "description": "Find the person who is most like you through an interactive personality onboarding, avatar high-five reveals, and deep profile comparisons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
